@@ -28,26 +28,26 @@ router.post('/invite', function(req, res) {
         if (body.ok) {
           res.render('result', {
             community: config.community,
-            message: 'Success! Check "'+ req.body.email +'" for an invite from Slack.'
+            message: 'Проверете "'+ req.body.email +'" за покана от Slack.'
           });
         } else {
           var error = body.error;
           if (error === 'already_invited' || error === 'already_in_team') {
             res.render('result', {
               community: config.community,
-              message: 'Success! You were already invited.<br>' +
-                       'Visit <a href="https://'+ config.slackUrl +'">'+ config.community +'</a>'
+              message: 'Вие вече сте поканен.<br>' +
+                       'Отиди на <a href="https://'+ config.slackUrl +'">'+ config.community +'</a>'
             });
             return;
           } else if (error === 'invalid_email') {
-            error = 'The email you entered is an invalid email.';
+            error = 'Имейлът, който сте въвели не е валиден имейл.';
           } else if (error === 'invalid_auth') {
-            error = 'Something has gone wrong. Please contact a system administrator.';
+            error = 'Нещо се обърка. Моля свържете се с администратора.';
           }
 
           res.render('result', {
             community: config.community,
-            message: 'Failed! ' + error,
+            message: 'Грешка! ' + error,
             isFailed: true
           });
         }
@@ -55,22 +55,22 @@ router.post('/invite', function(req, res) {
   } else {
     var errMsg = [];
     if (!req.body.email) {
-      errMsg.push('your email is required');
+      errMsg.push('Въвеждането на имейл е задължително');
     }
 
     if (!!config.inviteToken) {
       if (!req.body.token) {
-        errMsg.push('valid token is required');
+        errMsg.push('Валиден ключ е задължително поле');
       }
 
       if (req.body.token && req.body.token !== config.inviteToken) {
-        errMsg.push('the token you entered is wrong');
+        errMsg.push('Ключът, който сте въвели е невалиден');
       }
     }
 
     res.render('result', {
       community: config.community,
-      message: 'Failed! ' + errMsg.join(' and ') + '.',
+      message: 'Грешка! ' + errMsg.join(' and ') + '.',
       isFailed: true
     });
   }
